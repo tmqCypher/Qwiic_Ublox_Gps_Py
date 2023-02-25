@@ -159,28 +159,22 @@ class UbloxGps(object):
         checksum = core.Parser._generate_fletcher_checksum(message[2:])
 
         self.hard_port.write(message + checksum)
+        parse_tool = core.Parser([ubx_class, sp.ACK_CLS])
+        msg = parse_tool.receive_from(self.hard_port)
 
-        return True
+        return msg
 
     def ubx_get_val(self, key_id):
         """
-        This function takes the given key id and breakes it into individual bytes
-        which are then cocantenated together. This payload is then sent along
-        with the CFG Class and VALGET Message ID to send_message(). Ublox
-        Messages are then parsed for the requested values or a NAK signifying a
-        problem.
+        This function takes the given key id passes it along with the CFG Class
+        to send_message(). Ublox Messages are then parsed for the requested values
+        or a NAK signifying a problem.
 
         :return: The requested payload or a NAK on failure.
         :rtype: namedtuple
         """
-        key_id_bytes = bytes([])
-        if type(key_id) != bytes:
-            while key_id > 0:
-                key_id_bytes = key_id_bytes + bytes([(key_id & 0xFF)])
-                key_id = key_id >> 8
 
-        key_id_bytes = key_id_bytes[::-1]
-        msg = self.send_message(sp.CFG_CLS, self.cfg_ms.get('VALGET'), key_id_bytes)
+        msg = self.send_message(sp.CFG_CLS, key_id)
         parse_tool = core.Parser([sp.CFG_CLS, sp.ACK_CLS])
         msg = parse_tool.receive_from(self.hard_port)
         return msg

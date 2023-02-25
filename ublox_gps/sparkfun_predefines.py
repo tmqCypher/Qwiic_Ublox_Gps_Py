@@ -137,6 +137,37 @@ CFG_CLS = core.Cls(0x06, 'CFG', [
             core.Field('cfgData','U4'),
         ]),
     ]),    
+    core.Message(0x24, 'NAV5', [
+        core.BitField('mask', 'X2', [
+            core.Flag('dyn', 0, 1),
+            core.Flag('minEl', 1, 2),
+            core.Flag('posFixMode', 2, 3),
+            core.Flag('drLim', 3, 4),
+            core.Flag('posMask', 4, 5),
+            core.Flag('timeMask', 5, 6),
+            core.Flag('staticHoldMask', 6, 7),
+            core.Flag('dgpsMask', 7, 8),
+            core.Flag('cnoThreshold', 8, 9),
+            core.Flag('utc', 10, 11)
+        ]),
+        core.Field('dynModel', 'U1'),
+        core.Field('fixMode', 'U1'),
+        core.Field('fxedAlt', 'I4'),
+        core.Field('fixedAltVar', 'U4'),
+        core.Field('minElev', 'I1'),
+        core.Field('drLimit', 'U1'),
+        core.Field('pDop', 'U2'),
+        core.Field('tDop', 'U2'),
+        core.Field('pAcc', 'U2'),
+        core.Field('tAcc', 'U2'),
+        core.Field('staticHoldThresh', 'U1'),
+        core.Field('dgnssTimeout', 'U1'),
+        core.Field('cnoThreshNumSVs', 'U1'),
+        core.Field('cnoThresh', 'U1'),
+        core.PadByte(2), # reserved1, U1[2]
+        core.Field('utcStandard', 'U1'),
+        core.PadByte(5), # reserved2, U1[5]
+    ])
 ])
 
 ESF_CLS = core.Cls(0x10, 'ESF', [
